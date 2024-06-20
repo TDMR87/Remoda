@@ -41,14 +41,12 @@ export const HomePage = () => {
   return (
     <>
       <SearchBar onActivate={(searchTerm) => executeSearch(searchTerm)} onClear={undoSearch} />
-
+      {loading && <Loading />}
       <MovieGrid>
         {movies.map((movie, index) =>
           <>
             <MovieCard key={movie.id} movie={movie} />
-            {
-              loading && index === (movies.length - 1) && <Loading />
-            }
+            {loading && index === (movies.length - 1) && <Loading />}
             {
               index === movies.length - 1 &&
               (currentPage < totalPages) &&

@@ -12,16 +12,10 @@ builder.Services.AddHttpClient<MovieService>((httpClient) =>
     (
         "Bearer", builder.Configuration["MovieDatabase:ApiAccessToken"]
     );
-});
-
-builder.Services.AddSpaStaticFiles(configuration =>
-{
-    configuration.RootPath = "..\\..\\Frontend\\dist";
-});
+}).AddStandardResilienceHandler();
 
 var app = builder.Build();
 app.UseHttpsRedirection();
-app.UseSpaStaticFiles();
 app.UseCors("default-policy");
 
 app.MapGet("api/search", async (MovieService movieService, [FromQuery] string keyword, [FromQuery] int page = 1) =>

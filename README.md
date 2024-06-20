@@ -5,6 +5,7 @@ Web app for searching movies, built with React (TypeScript) and .NET
 Try the live demo at [remoda.azurewebsites.net](https://remoda.azurewebsites.net/).
 
 *****
+![Example Image](docs/img/remoda_screenshot_01.png)
 
 # Local development
 

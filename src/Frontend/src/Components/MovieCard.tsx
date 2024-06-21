@@ -1,11 +1,11 @@
 import { FC } from "react"
 import { Link } from 'react-router-dom'
 
-interface MoviePreviewProps {
+interface MovieCardProps {
   movie: MovieDetails
 }
 
-export const MovieCard: FC<MoviePreviewProps> = ({ movie }) => {
+export const MovieCard: FC<MovieCardProps> = ({ movie }) => {
 
   return (
     <>

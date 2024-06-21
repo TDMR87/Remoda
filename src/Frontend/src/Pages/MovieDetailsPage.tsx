@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getMovieDetails } from '../ApiClient';
 import { Link, useParams } from 'react-router-dom';
-import { MovieCardSkeleton } from '../Components/MovieCardSkeleton';
+import { MovieDetailsCardSkeleton } from '../Components/MovieDetailsCardSkeleton';
 import { MovieDetailsCard } from '../Components/MovieDetailsCard';
 
 export const MovieDetailsPage = () => {
@@ -32,7 +32,7 @@ export const MovieDetailsPage = () => {
         Go back
       </Link>
       <div className='flex flex-col items-center'>
-        {isLoading && <MovieCardSkeleton />}
+        {isLoading && <MovieDetailsCardSkeleton />}
         {movie && <MovieDetailsCard movie={movie} />}
       </div>
 

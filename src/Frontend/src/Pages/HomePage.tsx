@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { searchMovies } from '../ApiClient'
-import { MovieCard } from "../Components/MoviePreviewCard"
+import { MovieCard } from "../Components/MovieCard"
 import { MovieGrid } from "../Components/MovieGrid"
 import { SearchBar } from "../Components/SearchBar"
-import { Loading } from '../Components/Loading'
 import { BottomScrollListener } from '../Components/ScrollToBottomObserver'
+import { MovieCardSkeleton } from '../Components/MovieCardSkeleton'
 
 export const HomePage = () => {
 
@@ -41,15 +41,24 @@ export const HomePage = () => {
   return (
     <>
       <SearchBar onActivate={(searchTerm) => executeSearch(searchTerm)} onClear={undoSearch} />
-      {loading && <Loading />}
       <MovieGrid>
+
+        {/* Display a few card skeletons while loading */}
+        {loading && [...Array(8)].map((index) => <MovieCardSkeleton key={index} />)}
+
         {movies.map((movie, index) =>
           <>
             <MovieCard key={movie.id} movie={movie} />
-            {loading && index === (movies.length - 1) && <Loading />}
+
             {
-              index === movies.length - 1 &&
-              (currentPage < totalPages) &&
+              /* If we are on the last item, display a spinner 
+              if we are loading more movies */
+              loading && index === (movies.length - 1) && <MovieCardSkeleton />
+            }
+
+            {
+              /* Execute a new search if the user reached the bottom of the page */
+              index === movies.length - 1 && (currentPage < totalPages) &&
               <BottomScrollListener onBottomReached={() => executeSearch(currentSearchTerm, currentPage + 1)} />
             }
           </>

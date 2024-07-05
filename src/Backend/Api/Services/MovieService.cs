@@ -18,8 +18,8 @@ public class MovieService(HttpClient httpClient) : IDisposable
             results.Movies = results.Movies.Where(
                 movie =>
                 movie.Title is not null &&
-                movie.PosterPath is not null)
-                .OrderByDescending(movie => movie.ReleaseDate)
+                (movie.PosterPath is not null || movie.BackdropPath is not null))
+                .OrderByDescending(movie => movie.Popularity).ThenBy(movie => movie.VoteCount)
                 .ToList();
 
             return results;
@@ -34,15 +34,9 @@ public class MovieService(HttpClient httpClient) : IDisposable
     {
         var response = await httpClient.GetAsync($"movie/{movieId}");
 
-        if (response.IsSuccessStatusCode)
-        {
-            var movie = await response.Content.ReadFromJsonAsync<MovieDetails>();
-            return movie;
-        }
-        else
-        {
-            return null;
-        }
+        return response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<MovieDetails>()
+            : null;
     }
 
     public void Dispose() => httpClient?.Dispose();

@@ -34,5 +34,5 @@ export const BottomScrollListener = ({ onBottomReached }: BottomScrollListenerPr
     };
   }, [onBottomReached]);
 
-  return (<div ref={bottomTriggerRef}></div>)
+  return (<div id="bottomObserver" ref={bottomTriggerRef}></div>)
 }

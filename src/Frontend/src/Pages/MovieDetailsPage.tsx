@@ -1,25 +1,25 @@
+import axios from "../ApiClient";
 import { useEffect, useState } from 'react';
-import { getMovieDetails } from '../ApiClient';
 import { Link, useParams } from 'react-router-dom';
 import { MovieDetailsCardSkeleton } from '../Components/MovieDetailsCardSkeleton';
 import { MovieDetailsCard } from '../Components/MovieDetailsCard';
 
 export const MovieDetailsPage = () => {
 
-  const [movie, setMovieDetails] = useState<MovieDetails | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
+  const [movie, setMovie] = useState<MovieDetails | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const response = await getMovieDetails(id);
-        setMovieDetails(response.data);
-      } catch (error) {
-        console.log(error);
+        const response = await axios.get<MovieDetails>('movie/' + id)
+        setMovie(response.data);
+      }
+      catch {
       }
       finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
@@ -32,10 +32,9 @@ export const MovieDetailsPage = () => {
         Go back
       </Link>
       <div className='flex flex-col items-center'>
-        {isLoading && <MovieDetailsCardSkeleton />}
+        {loading && <MovieDetailsCardSkeleton />}
         {movie && <MovieDetailsCard movie={movie} />}
       </div>
-
 
     </>
   )

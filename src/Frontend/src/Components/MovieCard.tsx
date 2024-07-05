@@ -1,5 +1,6 @@
 import { FC } from "react"
 import { Link } from 'react-router-dom'
+import { useDarkMode } from "../Hooks/DarkModeContext";
 
 interface MovieCardProps {
   movie: MovieDetails
@@ -7,12 +8,14 @@ interface MovieCardProps {
 
 export const MovieCard: FC<MovieCardProps> = ({ movie }) => {
 
+  const { isDarkMode } = useDarkMode();
+
   return (
     <>
-      <div className="bg-stone-100 rounded-xl shadow-lg relative max-w-sm">
+      <div className={`${isDarkMode ? 'bg-slate-900' : 'bg-stone-100'} rounded-xl shadow-lg relative max-w-sm`} >
         <div className="p-4">
           <div className="flex flex-col mb-5 items-center">
-            <h3 className="text-xl font-bold">
+            <h3 className={`text-xl font-bold ${isDarkMode ? 'text-stone-100' : 'text-slate-900'}`}>
               {movie.title} ({movie.release_date?.slice(0, 4)})
             </h3>
             <div className="text-yellow-500 mt-2">
@@ -23,11 +26,9 @@ export const MovieCard: FC<MovieCardProps> = ({ movie }) => {
           <div className="flex flex-col mb-5 items-center">
             <img src={movie.imageBaseAddress + movie.poster_path} />
           </div>
-          <div className="mb-5">
-            {movie.overview?.slice(0, 100)}...
-          </div>
-          <div className="flex flex-col lg:flex-row justify-between mb-4">
-            <Link to={`/movie/${movie.id}`} className="w-full h-[36px] bg-sky-700 hover:bg-sky-900 text-white px-4 py-2 rounded-lg text-center text-sm">
+          <div className={`mb-4 ${isDarkMode ? 'text-stone-100' : 'text-slate-900'}`}>
+            {movie.overview?.slice(0, 200)}...
+            <Link to={`/movie/${movie.id}`} className="w-full text-sky-600 hover:text-slate-700">
               Read more
             </Link>
           </div>

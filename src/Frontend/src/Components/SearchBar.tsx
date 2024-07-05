@@ -70,7 +70,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear }) => 
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-80 mb-100 rounded-full shadow-md" style={searchBarStyle}>
+      <div className="relative w-80 mb-100 rounded-full shadow-lg" style={searchBarStyle}>
         <input
           ref={searchInputRef}
           type="text"

@@ -1,5 +1,5 @@
 import { MainLayout } from './Layouts/MainLayout';
-import { HomePage } from './Pages/HomePage'
+import { MovieSearchPage } from './Pages/MovieSearchPage'
 import { MovieDetailsPage } from './Pages/MovieDetailsPage';
 import { NotFoundPage } from './Pages/NotFoundPage';
 import {
@@ -14,7 +14,7 @@ const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<MainLayout />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<MovieSearchPage />} />
         <Route path='/movie/:id' element={<MovieDetailsPage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Route>

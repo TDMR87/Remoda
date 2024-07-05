@@ -1,7 +1,12 @@
+import { useDarkMode } from "../Hooks/DarkModeContext";
+
 export const MovieCardSkeleton = () => {
+
+  const { isDarkMode } = useDarkMode();
+
   return (
     <>
-      <div className="bg-stone-100 rounded-xl shadow-lg relative max-w-sm animate-pulse">
+      <div className={`${isDarkMode ? 'bg-stone-600' : 'bg-stone-200'} rounded-xl shadow-lg relative max-w-4xl animate-pulse`}>
         <div className="p-4">
           <div className="flex flex-col mb-5 items-center">
             <div className="h-6 bg-gray-200 rounded-full dark:bg-gray-700 w-80 mb-4"></div>

@@ -1,7 +1,12 @@
+import { useDarkMode } from "../Hooks/DarkModeContext";
+
 export const MovieDetailsCardSkeleton = () => {
+
+  const { isDarkMode } = useDarkMode();
+
   return (
     <>
-      <div className="bg-stone-100 rounded-xl shadow-lg relative max-w-4xl animate-pulse">
+      <div className={`${isDarkMode ? 'bg-stone-600' : 'bg-stone-200'} rounded-xl shadow-lg relative max-w-4xl animate-pulse`}>
         <div className="p-4">
           <div className="flex flex-col md:flex-row mb-5 items-center md:items-start">
             <div className="flex items-center justify-center w-full h-60 bg-gray-300 mr-10 rounded sm:w-96 dark:bg-gray-700">
@@ -26,11 +31,11 @@ export const MovieDetailsCardSkeleton = () => {
               <br />
               <br />
               <hr className="mb-5" />
-              <p>
+              <div>
                 <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
                 <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
                 <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
-              </p>
+              </div>
             </div>
           </div>
         </div>

@@ -1,11 +1,9 @@
 # Remoda (React Movie Database)
 
-Web app for searching movies, built with React (TypeScript) and .NET
+Web app for searching movies, featuring active search and infinite scrolling. 
 
-Frontend: ``Vite + React``
-
+Frontend: ``Vite + React``\
 Backend: ``.NET``
-
 
 Try the live demo at [remoda.azurewebsites.net](https://remoda.azurewebsites.net/).
 

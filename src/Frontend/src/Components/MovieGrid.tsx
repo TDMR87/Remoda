@@ -10,12 +10,11 @@ export const MovieGrid = ({ children }: MovieGridProps) => {
 
   useEffect(() => {
     const lastViewedMovieId = sessionStorage.getItem('lastViewedMovieId');
-
     const scrollToLastViewedMovie = () => {
       if (lastViewedMovieId) {
-        const lastViwewedMovieCard = document.getElementById(lastViewedMovieId!);
-        if (lastViwewedMovieCard) {
-          lastViwewedMovieCard.scrollIntoView({ block: 'center' });
+        const lastViewedMovieCard = document.getElementById(lastViewedMovieId!);
+        if (lastViewedMovieCard) {
+          lastViewedMovieCard.scrollIntoView({ block: 'center' });
         }
       }
     }

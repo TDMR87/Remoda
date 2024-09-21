@@ -17,7 +17,14 @@ export const MovieSearchPage = () => {
 
     return (
         <>
-            <SearchBar onActivate={setSearchTerm} onClear={() => { setSearchTerm('') }} />
+            <SearchBar
+                sticky={() => movies?.pages === undefined || movies?.pages[0].total_results === 0}
+                onActivate={setSearchTerm}
+                onClear={() => {
+                    setSearchTerm('');
+                    window.scrollTo({ top: 0 });
+                }}
+            />
 
             <MovieGrid>
                 {movies?.pages.map((page) => {
@@ -26,9 +33,10 @@ export const MovieSearchPage = () => {
                     });
                 })}
 
-                {searchTerm && (isLoading || isFetchingNextPage) && <Repeater count={8}>
-                    <MovieCardSkeleton />
-                </Repeater>}
+                {searchTerm && (isLoading || isFetchingNextPage) &&
+                    <Repeater count={8}>
+                        <MovieCardSkeleton />
+                    </Repeater>}
 
                 <BottomScrollObserver onBottomReached={fetchNextPage} />
             </MovieGrid>

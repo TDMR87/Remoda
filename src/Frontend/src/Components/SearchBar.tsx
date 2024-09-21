@@ -3,9 +3,10 @@ import React, { memo, useEffect, useState } from 'react';
 interface SearchBarProps {
   onActivate: (searchTerm: string) => void;
   onClear: () => void;
+  sticky: () => boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear, sticky }) => {
 
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +24,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear }) => {
     let lastScrollTop = 0;
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY > lastScrollTop) {
+      if (!sticky() && scrollY > lastScrollTop) {
         setIsScrolledDown(true);
       } else {
         setIsScrolledDown(false);
@@ -33,7 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear }) => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sticky]);
 
   // When search term changes, debounce after a delay
   useEffect(() => {
@@ -53,7 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear }) => {
 
   const searchBarStyle: React.CSSProperties = {
     position: 'fixed',
-    top: isScrolledDown ? '-150px' : '9rem', // Hide the search bar when scrolling down
+    top: !sticky() && isScrolledDown ? '-150px' : '9rem', // Hide the search bar when scrolling down
     transition: 'top 0.3s ease-in-out',
     zIndex: 2
   };

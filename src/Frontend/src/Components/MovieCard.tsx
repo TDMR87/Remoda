@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useDarkMode } from "../Contexts/DarkModeContext";
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { getMovie } from "../ApiClient";
+import Rating from './Rating';
 
 interface MovieCardProps {
   movie: MovieDetails
@@ -7,36 +11,62 @@ interface MovieCardProps {
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
 
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
   const { colorSchemes } = useDarkMode();
+  const queryClient = useQueryClient();
+
   const saveScrollPosition = () => sessionStorage.setItem('lastViewedMovieId', `movie-${movie.id}`);
 
+  const prefetchMovie = async (movieId: string) => {
+    await queryClient.prefetchQuery({
+      queryKey: ['movie', movieId],
+      queryFn: async () => await getMovie(movieId.toString())
+    })
+  };
+
   return (
-    <>
-      <div id={`movie-${movie.id}`} className={`${colorSchemes.backgroundCard} rounded-xl shadow-lg relative max-w-sm ml-4 mr-4 mb-8 mt-0`}>
-        <div className="p-4">
-          <div className="flex flex-col mb-5 items-center">
-            <h3 className={`text-xl font-bold ${colorSchemes.text}`}>
-              {movie.title} ({movie.release_date?.slice(0, 4)})
-            </h3>
-            <div className="text-lg text-yellow-500 mt-2">
-              {'★'.repeat(Math.ceil(movie.vote_average || 0))}
-              <span className="ml-2">({Math.ceil(movie.vote_average || 0)}/10)</span>
-            </div>
-          </div>
-          <div className="flex flex-col mb-5 items-center">
-            <img src={movie.imageBaseAddress + movie.poster_path} style={{ borderRadius: '10px' }} />
-          </div>
-          <div className={`mb-4 ${colorSchemes.text}`}>
-            {movie.overview?.slice(0, 200)}...
-            <Link
-              to={`/movie/${movie.id}`}
-              onClick={saveScrollPosition}
-              className={`w-full text-sky-600 ${colorSchemes.linkHover}`}>
-              Read more
-            </Link>
+    <div id={`movie-${movie.id}`} className={`${colorSchemes.backgroundCard} rounded-xl shadow-lg relative max-w-sm ml-4 mr-4 mb-8 mt-0`}>
+      <div className="p-4">
+        <div className="flex flex-col mb-5 items-center">
+          <h3 className={`text-xl font-bold ${colorSchemes.text}`}>
+            {movie.title} ({movie.release_date?.slice(0, 4)})
+          </h3>
+          <div className="mb-6">
+            <Rating starsCount={Math.ceil(movie.vote_average || 0)} />
           </div>
         </div>
+        {/* Show image skeleton while the image loads */}
+        <div className="flex flex-col mb-5 items-center">
+          {isLoadingImage && (
+            <div className="flex flex-col mb-5 items-center animate-pulse">
+              <div className="w-48 h-64 bg-gray-300 rounded dark:bg-gray-700"></div>
+            </div>
+          )}
+          {/* Image */}
+          <img
+            onLoad={() => setIsLoadingImage(false)}
+            src={movie.imageBaseAddress + movie.poster_path}
+            alt={`${movie.title} poster`}
+            style={{
+              borderRadius: '10px',
+              width: isLoadingImage ? '0' : 'auto',  // Set width to 0 while loading
+              height: isLoadingImage ? '0' : 'auto', // Set height to 0 while loading
+            }}
+          />
+        </div>
+        <div className={`mb-4 ${colorSchemes.text}`}>
+          {movie.overview?.slice(0, 200)}...
+          <Link
+            to={`/movie/${movie.id}`}
+            onClick={saveScrollPosition}
+            onTouchEnd={saveScrollPosition}
+            onMouseEnter={() => prefetchMovie(movie.id.toString())}
+            onTouchStart={() => prefetchMovie(movie.id.toString())}
+            className={`w-full text-sky-600 ${colorSchemes.linkHover}`}>
+            Read more
+          </Link>
+        </div>
       </div>
-    </>
+    </div>
   )
 }

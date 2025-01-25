@@ -3,8 +3,7 @@ import { useDarkMode } from '../Contexts/DarkModeContext';
 import { MdLightMode } from "react-icons/md";
 
 export interface HeroProps {
-  Title: string,
-  Subtitle: string
+  Title: string
 }
 
 const heroStyle: React.CSSProperties = {
@@ -14,7 +13,7 @@ const heroStyle: React.CSSProperties = {
   zIndex: 1
 };
 
-export const Hero = ({ Title, Subtitle }: HeroProps) => {
+export const Hero = ({ Title }: HeroProps) => {
 
   const { isDarkMode, colorSchemes, toggleDarkMode } = useDarkMode();
 
@@ -33,9 +32,6 @@ export const Hero = ({ Title, Subtitle }: HeroProps) => {
               <h1 className={`text-4xl font-extrabold text-5xl ${colorSchemes.heroText}`}>
                 {Title}
               </h1>
-            </div>
-            <div className={`my-1 text-xl ${colorSchemes.heroText}`}>
-              {Subtitle}
             </div>
           </div>
         </div>

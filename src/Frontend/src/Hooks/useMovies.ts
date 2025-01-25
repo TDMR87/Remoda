@@ -6,13 +6,11 @@ export const useMovieSearch = (searchTerm: string | undefined) => useInfiniteQue
     getNextPageParam: (previousResult) => previousResult.page < previousResult.total_pages ? previousResult.page + 1 : undefined,
     queryFn: ({ pageParam }) => searchMovies(searchTerm, pageParam as number),
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 60,
-    refetchOnWindowFocus: false
+    staleTime: 1000 * 60 * 60
 });
 
 export const useMovieDetails = (movieId: string) => useQuery({
-    queryKey: ['movie-' + movieId],
+    queryKey: ['movie', movieId],
     queryFn: async () => await getMovie(movieId),
-    staleTime: 1000 * 60 * 60,
-    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60
 });

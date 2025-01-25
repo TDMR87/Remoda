@@ -9,7 +9,7 @@ export const MainLayout = () => {
   return (
     <>
       <div className={`flex flex-col items-center h-100 min-h-screen ${colorSchemes.background}`}>
-        <Hero Title='Remoda' Subtitle='React movie database' />
+        <Hero Title='Remoda' />
         <div className="flex-grow">
           <Outlet />
         </div>

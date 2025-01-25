@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-interface BottomScrollObserverProps {
-  onBottomReached: () => void;
+interface VisibilityObserverProps {
+  onVisible: () => void;
 }
 
-export const BottomScrollObserver = ({ onBottomReached }: BottomScrollObserverProps) => {
+export const VisibilityObserver = ({ onVisible }: VisibilityObserverProps) => {
   const targetElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export const BottomScrollObserver = ({ onBottomReached }: BottomScrollObserverPr
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) onBottomReached();
+          if (entry.isIntersecting) onVisible();
         });
       },
       {
@@ -27,7 +27,7 @@ export const BottomScrollObserver = ({ onBottomReached }: BottomScrollObserverPr
     if (target) observer.observe(target);
 
     return () => { if (target) observer.unobserve(target); };
-  }, [onBottomReached]);
+  }, [onVisible]);
 
   return (
     <div id="bottomObserver" className="opacity-0" ref={targetElementRef}></div>

@@ -3,42 +3,36 @@ import { useState } from 'react';
 import { MovieCard } from '../Components/MovieCard';
 import { MovieCardSkeleton } from '../Components/MovieCardSkeleton';
 import { MovieGrid } from '../Components/MovieGrid';
-import { Repeater } from '../Components/Repeater';
 import { useMovieSearch } from '../Hooks/useMovies';
 import { ErrorPage } from './ErrorPage';
-import { BottomScrollObserver } from '../Components/BottomScrollObserver';
+import { VisibilityObserver } from '../Components/VisibilityObserver';
 
 export const MovieSearchPage = () => {
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const { data: movies, error, isLoading, isFetchingNextPage, fetchNextPage } = useMovieSearch(searchTerm);
+    const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
+    const { data: movies, error, isLoading, fetchNextPage } = useMovieSearch(searchTerm);
 
-    if (error) return <ErrorPage Title='Oops..' Text={error.message} />
+    if (error) {
+        return <ErrorPage Title='Oops..' Text={error.message} />
+    }
 
     return (
         <>
             <SearchBar
-                sticky={() => movies?.pages === undefined || movies?.pages[0].total_results === 0}
+                isSticky={() => movies?.pages === undefined || movies?.pages[0].total_results === 0}
                 onActivate={setSearchTerm}
                 onClear={() => {
                     setSearchTerm('');
                     window.scrollTo({ top: 0 });
-                }}
-            />
+                }} />
 
             <MovieGrid>
-                {movies?.pages.map((page) => {
-                    return page.results.map((movie: MovieDetails) => {
-                        return <MovieCard key={movie.id} movie={movie} />
-                    });
-                })}
-
-                {searchTerm && (isLoading || isFetchingNextPage) &&
-                    <Repeater count={8}>
-                        <MovieCardSkeleton />
-                    </Repeater>}
-
-                <BottomScrollObserver onBottomReached={fetchNextPage} />
+                {searchTerm && isLoading && [...Array(8)].map(() => <MovieCardSkeleton />)}
+                {searchTerm && !isLoading && movies?.pages.map((searchResults) =>
+                    searchResults.results.map((movie: MovieDetails) =>
+                        <MovieCard key={movie.id} movie={movie} />
+                    ))}
+                <VisibilityObserver onVisible={fetchNextPage} />
             </MovieGrid>
         </>
     )

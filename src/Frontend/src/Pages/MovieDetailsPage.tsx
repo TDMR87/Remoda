@@ -14,7 +14,7 @@ export const MovieDetailsPage = () => {
 
   return (
     <>
-      <Link to='/' className="text-sky-600 hover:text-slate-500 p-3">
+      <Link to='/' className="text-sky-600 hover:text-slate-500 p-6">
         <span className={`${colorSchemes.text} text-2xl`}>&larr;</span>
         <span className={`${colorSchemes.text} text-lg`}> Return</span>
       </Link>

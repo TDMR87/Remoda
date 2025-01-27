@@ -1,4 +1,4 @@
-import { useDarkMode } from '../Contexts/DarkModeContext';
+import { useAppContext } from '../Contexts/AppContext';
 
 type ErrorProps = {
   Title: string;
@@ -8,7 +8,7 @@ type ErrorProps = {
 
 export const ErrorPage = ({ Title, Text }: ErrorProps) => {
 
-  const { colorSchemes } = useDarkMode();
+  const { colorSchemes } = useAppContext();
 
   return (
     <>

@@ -1,14 +1,14 @@
-import { useDarkMode } from "../Contexts/DarkModeContext";
+import { useAppContext } from "../Contexts/AppContext";
 
 export const MovieDetailsCardSkeleton = () => {
-  const { colorSchemes } = useDarkMode();
+  const { colorSchemes } = useAppContext();
 
   return (
     <div className={`${colorSchemes.background} rounded-xl shadow-sm relative p-4`}>
       <div className="p-4">
         <div className="flex flex-col md:flex-row mb-5 items-center md:items-start gap-6 animate-pulse">
           {/* Image skeleton */}
-          <div className="bg-gray-300 lg:w-96 sm:w-48 w-48 lg:h-96 h-64 rounded-lg"></div>
+          <div className="bg-gray-300 lg:w-96 w-64 lg:h-96 h-80 rounded-lg"></div>
 
           {/* Content skeleton */}
           <div className="flex-grow w-full">

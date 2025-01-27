@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDarkMode } from "../Contexts/DarkModeContext";
+import { useAppContext } from "../Contexts/AppContext";
 import Rating from "./Rating";
 
 interface MovieDetailsProps {
@@ -9,7 +9,7 @@ interface MovieDetailsProps {
 export const MovieDetailsCard = ({ movie }: MovieDetailsProps) => {
 
   const [isLoadingImage, setIsLoadingImage] = useState(true);
-  const { colorSchemes } = useDarkMode();
+  const { colorSchemes } = useAppContext();
 
   return (
     <div className={`${colorSchemes.background} relative max-w-4xl`}>

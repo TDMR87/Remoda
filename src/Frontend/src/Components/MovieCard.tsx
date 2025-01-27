@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useDarkMode } from "../Contexts/DarkModeContext";
+import { useAppContext } from "../Contexts/AppContext";
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getMovie } from "../ApiClient";
@@ -12,7 +12,7 @@ interface MovieCardProps {
 export const MovieCard = ({ movie }: MovieCardProps) => {
 
   const [isLoadingImage, setIsLoadingImage] = useState(true);
-  const { colorSchemes } = useDarkMode();
+  const { colorSchemes } = useAppContext();
   const queryClient = useQueryClient();
 
   const saveScrollPosition = () => sessionStorage.setItem('lastViewedMovieId', `movie-${movie.id}`);

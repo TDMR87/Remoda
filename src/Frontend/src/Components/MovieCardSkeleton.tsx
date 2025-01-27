@@ -1,8 +1,8 @@
-import { useDarkMode } from "../Contexts/DarkModeContext";
+import { useAppContext } from "../Contexts/AppContext";
 
 export const MovieCardSkeleton = () => {
 
-  const { colorSchemes } = useDarkMode();
+  const { colorSchemes } = useAppContext();
 
   return (
     <div className={`${colorSchemes.backgroundSkeleton} rounded-xl shadow-lg p-4 ml-8 mb-6 animate-pulse max-w-full sm:w-96`}>

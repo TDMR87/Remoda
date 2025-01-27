@@ -4,7 +4,7 @@ import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './App.css'
-import { DarkModeProvider } from './Contexts/DarkModeContext.tsx'
+import { AppContextProvider } from './Contexts/AppContext.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,11 +18,11 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <DarkModeProvider>
+    <AppContextProvider>
       <QueryClientProvider client={queryClient}>
         <App />
         <ReactQueryDevtools />
       </QueryClientProvider>
-    </DarkModeProvider>
+    </AppContextProvider>
   </React.StrictMode>
 )

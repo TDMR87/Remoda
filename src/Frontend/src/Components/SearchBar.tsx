@@ -39,7 +39,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear, isSticky }) 
   // When search term changes, debounce after a delay
   useEffect(() => {
     let timerId: number;
-    if (searchTerm) {
+    if (searchTerm && searchTerm.length > 0) {
       timerId = setTimeout(async () => {
         onActivate(searchTerm);
         localStorage.setItem('searchTerm', searchTerm);
@@ -61,7 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onActivate, onClear, isSticky }) 
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-80 mb-100 rounded-full shadow-sm" style={searchBarStyle}>
+      <div className="relative lg:w-96 sm:w-80 xs:w-80 mb-100 rounded-full shadow-sm" style={searchBarStyle}>
         <input
           type="text"
           placeholder="Search for a movie..."

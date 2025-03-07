@@ -9,13 +9,14 @@ export const VisibilityObserver = ({ onVisible }: VisibilityObserverProps) => {
 
   useEffect(() => {
     if (!targetElementRef.current) return;
-
     const target = targetElementRef.current;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) onVisible();
+          if (entry.isIntersecting) {
+            onVisible();
+          }
         });
       },
       {
@@ -24,12 +25,13 @@ export const VisibilityObserver = ({ onVisible }: VisibilityObserverProps) => {
       }
     );
 
-    if (target) observer.observe(target);
+    // Observe the target
+    observer.observe(target);
 
     return () => { if (target) observer.unobserve(target); };
-  }, [onVisible]);
+  }, []);
 
   return (
-    <div id="bottomObserver" className="opacity-0" ref={targetElementRef}></div>
+    <div id="bottomObserver" className="opacity-10" ref={targetElementRef}></div>
   )
 }

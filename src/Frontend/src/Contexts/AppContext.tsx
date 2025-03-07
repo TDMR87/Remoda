@@ -2,11 +2,13 @@ import React, { FC, ReactNode, useContext, useEffect } from "react";
 import { useState } from "react";
 
 interface AppContextProps {
+  currentSearchTerm: string;
   isDarkMode: boolean;
-  isSearchMode: boolean;
+  isSearchActive: boolean;
   colorSchemes: ColorSchemes;
   toggleDarkMode: () => void;
-  setSearchMode: (val: boolean) => void;
+  setIsSearchActive: (val: boolean) => void;
+  setSearchTerm: (val: string) => void;
 }
 
 interface AppContextProviderProps {
@@ -23,13 +25,13 @@ type ColorSchemes = {
 };
 
 export const AppContext = React.createContext<AppContextProps>(undefined!);
+
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
-
   const [isDarkMode, setDarkMode] = useState(false);
-  const [isSearchMode, setSearchMode] = useState(false);
-
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [currentSearchTerm, setSearchTerm] = useState<string>('');
   const colorSchemes = {
     background: isDarkMode ? 'bg-slate-900' : 'bg-gray-200',
     backgroundSkeleton: isDarkMode ? 'bg-stone-600' : 'bg-stone-200',
@@ -44,10 +46,6 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) =>
     setDarkMode(!isDarkMode);
   }
 
-  const toggleSearching = (val: boolean) => {
-    setSearchMode(val);
-  }
-
   useEffect(() => {
     const darkMode = localStorage.getItem('isDarkMode');
     if (darkMode) {
@@ -57,7 +55,15 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) =>
 
   return (
     <>
-      <AppContext.Provider value={{ isDarkMode, isSearchMode, colorSchemes, toggleDarkMode, setSearchMode: toggleSearching }}>
+      <AppContext.Provider value={{
+        currentSearchTerm,
+        isDarkMode,
+        isSearchActive,
+        colorSchemes,
+        toggleDarkMode,
+        setIsSearchActive,
+        setSearchTerm
+      }}>
         {children}
       </AppContext.Provider>
     </>

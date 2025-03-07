@@ -4,28 +4,35 @@ public class MovieService(HttpClient httpClient) : IDisposable
 {
     public async Task<MovieSearchResults> SearchByKeywordAsync(string keyword, int page, CancellationToken cancellationToken = default)
     {
-        var httpResponse = await httpClient.GetAsync(
-            $"search/multi?query={keyword}&include_adult=false&page={page}", 
-            cancellationToken);
+        var results = new MovieSearchResults();
 
-        if (httpResponse.IsSuccessStatusCode)
+        while (results.Movies.Count < 16)
         {
-            var results = await httpResponse.Content.ReadFromJsonAsync<MovieSearchResults>(cancellationToken) ?? new();
+            var httpResponse = await httpClient.GetAsync(
+                $"search/multi?query={keyword}&include_adult=false&page={page}", cancellationToken);
 
-            results.Movies = results.Movies.Where(
-                movie =>
-                movie.Title is not null &&
-                (movie.PosterPath is not null || movie.BackdropPath is not null))
-                .OrderByDescending(movie => movie.Popularity)
-                .ThenBy(movie => movie.VoteCount)
-                .ToList();
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var result = await httpResponse.Content.ReadFromJsonAsync<MovieSearchResults>(cancellationToken) ?? new();
 
-            return results;
+                results.TotalResults = result.TotalResults;
+                results.TotalPages = result.TotalPages;
+                results.Page = result.Page;
+
+                results.Movies.AddRange(result.Movies.Where(movie =>
+                    movie.Title is not null &&
+                    (movie.PosterPath is not null || movie.BackdropPath is not null))
+                    .OrderByDescending(movie => movie.Popularity)
+                    .ThenBy(movie => movie.VoteCount)
+                    .ToList());
+            }
+
+            page++;
+
+            if (page >= results.TotalPages) break;
         }
-        else
-        {
-            return new MovieSearchResults();
-        }
+
+        return results;
     }
 
     public async Task<MovieDetails?> GetByIdAsync(string movieId, CancellationToken cancellationToken = default)

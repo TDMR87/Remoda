@@ -15,9 +15,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const { colorSchemes } = useAppContext();
   const queryClient = useQueryClient();
 
-  const saveScrollPosition = () => sessionStorage.setItem('lastViewedMovieId', `movie-${movie.id}`);
+  const saveLastViewedMovie = () => sessionStorage.setItem('lastViewedMovieId', `movie-${movie.id}`);
 
-  const prefetchMovie = async (movieId: string) => {
+  const preFetchMovie = async (movieId: string) => {
     await queryClient.prefetchQuery({
       queryKey: ['movie', movieId],
       queryFn: async () => await getMovie(movieId.toString())
@@ -58,10 +58,10 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           {movie.overview?.slice(0, 200)}...
           <Link
             to={`/movie/${movie.id}`}
-            onClick={saveScrollPosition}
-            onTouchEnd={saveScrollPosition}
-            onMouseEnter={() => prefetchMovie(movie.id.toString())}
-            onTouchStart={() => prefetchMovie(movie.id.toString())}
+            onClick={saveLastViewedMovie}
+            onTouchEnd={saveLastViewedMovie}
+            onMouseEnter={() => preFetchMovie(movie.id.toString())}
+            onTouchStart={() => preFetchMovie(movie.id.toString())}
             className={`w-full text-sky-600 ${colorSchemes.linkHover}`}>
             Read more
           </Link>

@@ -6,7 +6,7 @@ type ErrorProps = {
   HideBackButton?: boolean;
 }
 
-export const ErrorPage = ({ Title, Text }: ErrorProps) => {
+export const Error = ({ Title, Text }: ErrorProps) => {
 
   const { colorSchemes } = useAppContext();
 

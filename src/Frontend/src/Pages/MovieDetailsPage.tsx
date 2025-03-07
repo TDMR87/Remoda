@@ -3,23 +3,33 @@ import { MovieDetailsCardSkeleton } from '../Components/MovieDetailsCardSkeleton
 import { MovieDetailsCard } from '../Components/MovieDetailsCard';
 import { useAppContext } from "../Contexts/AppContext";
 import { useMovieDetails } from "../Hooks/useMovies";
-import { ErrorPage } from "./ErrorPage";
+import { Error } from "../Components/Error";
 import { useEffect, useState } from 'react';
 
 export const MovieDetailsPage = () => {
 
+  window.scrollTo({ top: 0 });
+
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
-    // Delay showing the skeleton to avoid flashing
-    const skeletonDelay = setTimeout(() => setShowSkeleton(true), 500);
+    const skeletonDelay = setTimeout(() => {
+      if (isLoading) setShowSkeleton(true);
+    }, 2000);
     return () => clearTimeout(skeletonDelay);
   }, []);
 
-  window.scrollTo({ top: 0 });
   const { id } = useParams<{ id: string }>();
   const { colorSchemes } = useAppContext();
-  const { status, data, error, isFetching } = useMovieDetails(id ?? "0");
+  const { data, isError, error, isLoading } = useMovieDetails(id ?? "0");
+
+  if (isLoading && showSkeleton) {
+    return <MovieDetailsCardSkeleton />
+  }
+
+  if (isError) {
+    return <Error Title='Oops..' Text={error.message} />
+  }
 
   return (
     <>
@@ -28,11 +38,9 @@ export const MovieDetailsPage = () => {
         <span className={`${colorSchemes.text} text-lg`}> Return</span>
       </Link>
 
-      <div className='flex flex-col items-center'>
-        {isFetching && showSkeleton && <MovieDetailsCardSkeleton />}
-        {status === "success" && data && <MovieDetailsCard movie={data} />}
-        {status === "error" && <ErrorPage Title="Oops.." Text={error.message} />}
-      </div>
+      {data && <div className='flex flex-col items-center'>
+        <MovieDetailsCard movie={data} />
+      </div>}
     </>
   )
 }

@@ -1,62 +1,66 @@
 import SearchBar from '../Components/SearchBar';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MovieCard } from '../Components/MovieCard';
 import { MovieCardSkeleton } from '../Components/MovieCardSkeleton';
-import { MovieGrid } from '../Components/MovieGrid';
-import { useMovieSearch } from '../Hooks/useMovies';
-import { ErrorPage } from './ErrorPage';
+import { useMovies } from '../Hooks/useMovies';
+import { Error } from '../Components/Error';
 import { VisibilityObserver } from '../Components/VisibilityObserver';
 import { useAppContext } from '../Contexts/AppContext';
+import { MovieGrid } from '../Components/MovieGrid';
 
 export const MovieSearchPage = () => {
 
-    const { setSearchMode } = useAppContext();
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const { setIsSearchActive, currentSearchTerm, setSearchTerm } = useAppContext();
+    const { data, error, isLoading, isFetchingNextPage, fetchNextPage } = useMovies(currentSearchTerm);
     const [showSkeleton, setShowSkeleton] = useState(false);
-    const { data: movies, error, isLoading, fetchNextPage } = useMovieSearch(searchTerm);
 
-    useEffect(() => {
-        const skeletonDelay = setTimeout(() => setShowSkeleton(true), 2000);
-        return () => clearTimeout(skeletonDelay);
-    }, [searchTerm]);
+    const movies = useMemo(() =>
+        data?.pages.flatMap((page: MovieSearchResults) => page.results) || [],
+        [data?.pages]
+    );
 
     const search = (searchTerm: string) => {
         setShowSkeleton(false);
         if (searchTerm.length > 0) {
-            setSearchMode(true);
+            window.scrollTo({ top: 0 })
+            setIsSearchActive(true);
             setSearchTerm(searchTerm);
-        } else {
-            setSearchMode(false);
+            setTimeout(() => { if (!data) setShowSkeleton(true); }, 2500);
         }
     }
 
     const clear = () => {
-        setSearchMode(false);
+        setIsSearchActive(false);
+        setShowSkeleton(false);
         setSearchTerm('');
-        window.scrollTo({ top: 0 })
+    }
+
+    if (isLoading && showSkeleton) {
+        return <>
+            <SearchBar onActivate={search} onClear={clear} isSticky={() => true} />
+
+            <MovieGrid>
+                {[...Array(8)].map((_, index) => <MovieCardSkeleton key={index} />)}
+            </MovieGrid>
+        </>
+    }
+
+    if (error) {
+        return <Error Title='Oops..' Text={error.message} />
     }
 
     return (
         <>
-            <SearchBar
-                isSticky={() => movies?.pages === undefined || movies?.pages[0].total_results === 0}
-                onActivate={search}
-                onClear={clear} />
+            <SearchBar onActivate={search} onClear={clear} isSticky={
+                () => !data?.pages || data?.pages[0].total_results === 0} />
 
-            {error && <ErrorPage Title='Oops..' Text={error.message} />}
+            <MovieGrid>
+                {movies.map((movie: MovieDetails) => <MovieCard key={movie.id} movie={movie} />)}
 
-            <div className="mt-36">
-                <MovieGrid>
-                    {searchTerm && isLoading && showSkeleton && [...Array(8)].map((_, index) =>
-                        <MovieCardSkeleton key={index} />)}
+                {isFetchingNextPage && [...Array(8)].map((_, index) => <MovieCardSkeleton key={index} />)}
 
-                    {searchTerm && !isLoading && movies?.pages.map((searchResults) =>
-                        searchResults.results.map((movie: MovieDetails) =>
-                            <MovieCard key={movie.id} movie={movie} />
-                        ))}
-                    <VisibilityObserver onVisible={fetchNextPage} />
-                </MovieGrid>
-            </div>
+                <VisibilityObserver onVisible={fetchNextPage} />
+            </MovieGrid>
         </>
     )
 }
